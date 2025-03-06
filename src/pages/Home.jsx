@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 
 const Home = () => {
   return (
-    <div className="pt-5"> {/* Padding-top to avoid overlap with fixed navbar */}
+    <div>
       {/* Hero Section */}
       <section
         className="hero-section text-center text-white fade-in"

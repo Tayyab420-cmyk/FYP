@@ -7,9 +7,10 @@ const Home = () => {
       <section
         className="hero-section text-center text-white fade-in"
         style={{
-          backgroundImage: `url('https://images.unsplash.com/photo-1547471080-7cc2cae68297?q=80&w=1200&auto=format&fit=crop')`,
+          backgroundImage: `url('https://images.unsplash.com/photo-1514558427911-8e293bebf18c?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D=crop')`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
+          backgroundColor:'green',
           height: '100vh',
           display: 'flex',
           alignItems: 'center',
@@ -34,7 +35,7 @@ const Home = () => {
           <div className="row">
             <div className="col-md-4 mb-4 slide-up">
               <div className="card">
-                <img src="https://images.unsplash.com/photo-1629146987608-6f2df09c7f96?q=80&w=800&auto=format&fit=crop" className="card-img-top" alt="Hunza Valley" style={{ height: '200px', objectFit: 'cover' }} />
+                <img src="https://images.unsplash.com/photo-1514558427911-8e293bebf18c?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D=crop" className="card-img-top" alt="Hunza Valley" style={{ height: '200px', objectFit: 'cover' }} />
                 <div className="card-body text-center">
                   <h5 className="card-title">Hunza Valley</h5>
                   <p className="card-text">A paradise of mountains and culture.</p>
@@ -44,7 +45,7 @@ const Home = () => {
             </div>
             <div className="col-md-4 mb-4 slide-up">
               <div className="card">
-                <img src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?q=80&w=800&auto=format&fit=crop" className="card-img-top" alt="Lahore" style={{ height: '200px', objectFit: 'cover' }} />
+                <img src="https://images.unsplash.com/photo-1629234932140-49db511736c5?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D=crop" className="card-img-top" alt="Lahore" style={{ height: '200px', objectFit: 'cover' }} />
                 <div className="card-body text-center">
                   <h5 className="card-title">Lahore</h5>
                   <p className="card-text">Rich history and vibrant culture.</p>
@@ -54,7 +55,7 @@ const Home = () => {
             </div>
             <div className="col-md-4 mb-4 slide-up">
               <div className="card">
-                <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=800&auto=format&fit=crop" className="card-img-top" alt="Karachi Beach" style={{ height: '200px', objectFit: 'cover' }} />
+                <img src="https://images.unsplash.com/photo-1629223221079-92a06eb9d8ef?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D=crop" className="card-img-top" alt="Karachi Beach" style={{ height: '200px', objectFit: 'cover' }} />
                 <div className="card-body text-center">
                   <h5 className="card-title">Karachi Clifton Beach</h5>
                   <p className="card-text">Seaside charm and bustling energy.</p>

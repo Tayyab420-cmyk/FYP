@@ -1,0 +1,11 @@
+:root {
+    --pak-dark: #1a3c34;
+    --pak-gold: #f1c40f;
+    --pak-light: #ecf0f1;
+  }
+  
+  /* Reset or global styles if needed */
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+  }

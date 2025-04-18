@@ -69,7 +69,7 @@ const Register = () => {
                 type="email"
                 id="email"
                 name="email"
-                className="form-control"
+                className="form-control"z
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="e.g., user@example.com"

@@ -12,18 +12,23 @@ const Transport = () => {
   const [sortOrder, setSortOrder] = useState('default');
   const [dateError, setDateError] = useState('');
   const [trainError, setTrainError] = useState('');
-  const [passengerNames, setPassengerNames] = useState([]); // Array for passenger names
+  const [passengerNames, setPassengerNames] = useState([]);
   const [specialRequests, setSpecialRequests] = useState('');
+  const [seatPreference, setSeatPreference] = useState('');
 
   const transportOptions = [
-    { id: 1, type: 'Bus', price: 1500, time: '08:00 AM', image: 'https://images.unsplash.com/photo-1502877331356-035a47f2d3c8?q=80&w=800&auto=format&fit=crop' },
-    { id: 2, type: 'Car', price: 5000, time: '10:00 AM', image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=800&auto=format&fit=crop' },
-    { id: 3, type: 'Van', price: 3000, time: '09:00 AM', image: 'https://images.unsplash.com/photo-1600585154526-990dced436cb?q=80&w=800&auto=format&fit=crop' },
-    { id: 4, type: 'Jeep', price: 7000, time: '11:00 AM', image: 'https://images.unsplash.com/photo-1517026575980-d6a1af91402b?q=80&w=800&auto=format&fit=crop' },
-    { id: 5, type: 'Train', price: 2000, time: '07:00 AM', image: 'https://images.unsplash.com/photo-1506619216599-9d16d0903dfd?q=80&w=800&auto=format&fit=crop' },
+    { id: 1, type: 'Bus', price: 1500, time: '08:00 AM', from: 'Lahore', to: 'Karachi' },
+    { id: 2, type: 'Car', price: 5000, time: '10:00 AM', from: 'Lahore', to: 'Swat Valley' },
+    { id: 3, type: 'Van', price: 3000, time: '09:00 AM', from: 'Karachi', to: 'Lahore' },
+    { id: 4, type: 'Jeep', price: 7000, time: '11:00 AM', from: 'Skardu', to: 'Fairy Meadows' },
+    { id: 5, type: 'Train', price: 2000, time: '07:00 AM', from: 'Lahore', to: 'Karachi' },
+    { id: 6, type: 'Bus', price: 2500, time: '06:00 PM', from: 'Lahore', to: 'Chitral' },
+    { id: 7, type: 'Jeep', price: 6000, time: '08:30 AM', from: 'Hunza Valley', to: 'Naltar Valley' },
+    { id: 8, type: 'Van', price: 3500, time: '01:00 PM', from: 'Swat Valley', to: 'Kaghan Valley' },
+    { id: 9, type: 'Bus', price: 1800, time: '09:30 AM', from: 'Karachi', to: 'Lahore' },
   ];
 
-  const noTrainCities = ['Hunza', 'Skardu', 'Fairy Meadows', 'Naltar Valley', 'Kalam', 'Swat Valley'];
+  const noTrainCities = ['Hunza Valley', 'Skardu', 'Fairy Meadows', 'Naltar Valley', 'Kaghan Valley', 'Swat Valley', 'Chitral'];
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -61,7 +66,7 @@ const Transport = () => {
     }
 
     if (name === 'passengers') {
-      setPassengerNames(Array(parseInt(value) || 1).fill('')); // Adjust passenger names array
+      setPassengerNames(Array(parseInt(value) || 1).fill(''));
     }
   };
 
@@ -76,11 +81,13 @@ const Transport = () => {
     if (dateError || trainError) return;
 
     let filteredResults = transportOptions
-      .filter((option) => !formData.type || option.type === formData.type)
+      .filter((option) => 
+        (!formData.from || option.from.toLowerCase().includes(formData.from.toLowerCase())) &&
+        (!formData.to || option.to.toLowerCase().includes(formData.to.toLowerCase())) &&
+        (!formData.type || option.type === formData.type)
+      )
       .map((option) => ({
         ...option,
-        from: formData.from,
-        to: formData.to,
         totalPrice: option.price * formData.passengers,
       }));
 
@@ -91,7 +98,7 @@ const Transport = () => {
     }
 
     setResults(filteredResults);
-    setPassengerNames(Array(formData.passengers).fill('')); // Reset names for new search
+    setPassengerNames(Array(formData.passengers).fill(''));
   };
 
   const handleReset = () => {
@@ -102,13 +109,15 @@ const Transport = () => {
     setTrainError('');
     setPassengerNames([]);
     setSpecialRequests('');
+    setSeatPreference('');
   };
 
   const handleBookTransport = (result) => {
-    alert(`Booked ${result.type} for ${formData.passengers} passenger(s) from ${result.from} to ${result.to}.\nPassengers: ${passengerNames.join(', ')}\nSpecial Requests: ${specialRequests || 'None'}\nTotal: PKR ${result.totalPrice}`);
+    alert(`Booked ${result.type} for ${formData.passengers} passenger(s) from ${result.from} to ${result.to}.\nPassengers: ${passengerNames.join(', ')}\nSpecial Requests: ${specialRequests || 'None'}\nSeat Preference: ${seatPreference || 'No preference'}\nTotal: PKR ${result.totalPrice}`);
     setResults([]);
     setPassengerNames([]);
     setSpecialRequests('');
+    setSeatPreference('');
   };
 
   return (
@@ -213,37 +222,47 @@ const Transport = () => {
             {results.map((result) => (
               <div className="col-md-6 mb-4 slide-up" key={result.id}>
                 <div className="card h-100 shadow-sm">
-                  <div className="row g-0">
-                    <div className="col-md-4">
-                      <img src={result.image} className="img-fluid rounded-start" alt={result.type} style={{ height: '100%', objectFit: 'cover' }} />
+                  <div className="card-body">
+                    <div className="text-center mb-3">
+                      <span className="dma-logo" style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--pak-gold)', textShadow: '0 0 5px rgba(241, 196, 15, 0.5)' }}>DMA</span>
                     </div>
-                    <div className="col-md-8">
-                      <div className="card-body">
-                        <h5 className="card-title mb-2">{result.type}</h5>
-                        <p className="card-text mb-1"><strong>Route:</strong> {result.from} to {result.to}</p>
-                        <p className="card-text mb-1"><strong>Total Price:</strong> PKR {result.totalPrice} ({formData.passengers} pax)</p>
-                        <p className="card-text mb-3"><strong>Departure:</strong> {result.time}</p>
-                        {passengerNames.map((name, index) => (
-                          <input
-                            key={index}
-                            type="text"
-                            className="form-control mb-2"
-                            value={name}
-                            onChange={(e) => handlePassengerNameChange(index, e.target.value)}
-                            placeholder={`Passenger ${index + 1} Name`}
-                            required
-                          />
-                        ))}
-                        <textarea
-                          className="form-control mb-3"
-                          value={specialRequests}
-                          onChange={(e) => setSpecialRequests(e.target.value)}
-                          placeholder="e.g., Extra luggage, wheelchair access"
-                          rows="2"
-                        />
-                        <button className="btn btn-success w-100" onClick={() => handleBookTransport(result)}>Book Now</button>
-                      </div>
+                    <h5 className="card-title mb-2 text-center">{result.type}</h5>
+                    <p className="card-text mb-1"><strong>Route:</strong> {result.from} to {result.to}</p>
+                    <p className="card-text mb-1"><strong>Total Price:</strong> PKR {result.totalPrice} ({formData.passengers} pax)</p>
+                    <p className="card-text mb-3"><strong>Departure:</strong> {result.time}</p>
+                    {passengerNames.map((name, index) => (
+                      <input
+                        key={index}
+                        type="text"
+                        className="form-control mb-2"
+                        value={name}
+                        onChange={(e) => handlePassengerNameChange(index, e.target.value)}
+                        placeholder={`Passenger ${index + 1} Name`}
+                        required
+                      />
+                    ))}
+                    <div className="mb-3">
+                      <label htmlFor={`seat-${result.id}`} className="form-label">Seat Preference:</label>
+                      <select
+                        id={`seat-${result.id}`}
+                        className="form-select"
+                        value={seatPreference}
+                        onChange={(e) => setSeatPreference(e.target.value)}
+                      >
+                        <option value="">No Preference</option>
+                        <option value="Window">Window</option>
+                        <option value="Aisle">Aisle</option>
+                        <option value="Front">Front</option>
+                      </select>
                     </div>
+                    <textarea
+                      className="form-control mb-3"
+                      value={specialRequests}
+                      onChange={(e) => setSpecialRequests(e.target.value)}
+                      placeholder="e.g., Extra luggage, wheelchair access"
+                      rows="2"
+                    />
+                    <button className="btn btn-success w-100" onClick={() => handleBookTransport(result)}>Book Now</button>
                   </div>
                 </div>
               </div>

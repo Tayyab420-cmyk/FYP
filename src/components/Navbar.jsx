@@ -2,11 +2,12 @@ import { Link, useNavigate } from 'react-router-dom';
 
 function Navbar({ isAuthenticated, handleLogout }) {
   return (
-    <nav className="navbar navbar-expand-lg navbar-custom fixed-top">
+    <nav className="navbar navbar-expand-lg shadow-sm py-3" style={{ backgroundColor: '#ffffff' }}>
       <div className="container">
-        <Link className="navbar-brand" to="/">
-          <span className="brand-text">DMA</span>
+        <Link className="navbar-brand fw-bold fs-4 text-primary" to="/">
+          <span style={{ fontFamily: 'Segoe UI', letterSpacing: '1px' }}>DMA</span>
         </Link>
+
         <button
           className="navbar-toggler"
           type="button"
@@ -16,28 +17,28 @@ function Navbar({ isAuthenticated, handleLogout }) {
           aria-expanded="false"
           aria-label="Toggle navigation"
         >
-          <span className="navbar-toggler-icon custom-toggler"></span>
+          <span className="navbar-toggler-icon"></span>
         </button>
+
         <div className="collapse navbar-collapse" id="navbarNav">
-          <ul className="navbar-nav ms-auto">
+          <ul className="navbar-nav ms-auto gap-2 align-items-center">
             <li className="nav-item">
-              <Link className="nav-link" to="/">Home</Link>
+              <Link className="nav-link text-dark fw-medium" to="/">Home</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/destinations">Destinations</Link>
+              <Link className="nav-link text-dark fw-medium" to="/destinations">Destinations</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/transport">Transport</Link>
+              <Link className="nav-link text-dark fw-medium" to="/transport">Transport</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/hotels">Hotels</Link>
+              <Link className="nav-link text-dark fw-medium" to="/hotels">Hotels</Link>
             </li>
             {isAuthenticated ? (
               <li className="nav-item">
                 <button
-                  className="nav-link btn btn-link"
+                  className="btn btn-outline-danger px-3 py-1 rounded-pill"
                   onClick={handleLogout}
-                  style={{ color: 'var(--pak-light)' }}
                 >
                   Logout
                 </button>
@@ -45,10 +46,14 @@ function Navbar({ isAuthenticated, handleLogout }) {
             ) : (
               <>
                 <li className="nav-item">
-                  <Link className="nav-link" to="/login">Login</Link>
+                  <Link className="btn btn-outline-primary px-3 py-1 rounded-pill" to="/login">
+                    Login
+                  </Link>
                 </li>
                 <li className="nav-item">
-                  <Link className="nav-link" to="/register">Register</Link>
+                  <Link className="btn btn-primary px-3 py-1 rounded-pill text-white" to="/register">
+                    Register
+                  </Link>
                 </li>
               </>
             )}

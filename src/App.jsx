@@ -8,7 +8,6 @@ import DestinationDetails from './pages/DestinationDetails';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Navbar from './components/Navbar'; // <-- import the navbar
-
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const navigate = useNavigate();
@@ -28,7 +27,8 @@ function App() {
   return (
     <div>
       <Navbar isAuthenticated={isAuthenticated} handleLogout={handleLogout} />
-      <div className="content-wrapper">
+      <div className="content-wrapper" style={{ paddingTop: '0px' }}>
+
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/destinations" element={<Destinations />} />

@@ -1,121 +1,165 @@
-/* Custom Colors */
+/* Custom Colors - TRAVEL THEME PALETTE */
 :root {
-  --pak-green: #2ecc71;
-  --pak-blue: #3434db;
-  --pak-gold: #1ef10f;
-  --pak-dark: #2c3e50;
-  --pak-light: #ecf0f1;
+  --pak-green: #00b894;     /* Soft Teal (Nature/Success) */
+  --pak-blue: #0984e3;      /* Vibrant Blue (Sky/Trust/Primary) */
+  --pak-gold: #ffbe76;      /* Soft Gold/Peach (Sun/Luxury) */
+  --pak-dark: #2d3436;      /* Deep Contrast */
+  --pak-light: #f5f6fa;     /* Clean Background */
+  --pak-shadow: rgba(45, 52, 54, 0.15); /* Light shadow base */
 }
 
-/* Navbar (unchanged) */
+/* --- Keyframe Animations --- */
+
+/* Keyframe for a subtle 'breathing' effect on the logo */
+@keyframes brand-glow {
+  0% { filter: drop-shadow(0 0 5px var(--pak-gold)); }
+  50% { filter: drop-shadow(0 0 10px var(--pak-gold)); }
+  100% { filter: drop-shadow(0 0 5px var(--pak-gold)); }
+}
+
+/* Keyframe for a smooth, subtle border pulse on form focus */
+@keyframes border-pulse {
+  0% { border-color: var(--pak-blue); box-shadow: 0 0 0 rgba(9, 132, 227, 0.4); }
+  100% { border-color: var(--pak-gold); box-shadow: 0 0 8px rgba(255, 190, 118, 0.6); }
+}
+
+/* Keyframe for an attractive 'traveling' highlight on hover */
+@keyframes button-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* --- Navbar Enhancements --- */
+
 .navbar-custom {
+  /* Gradient: Blue (Trust) to Dark (Pro) */
   background: linear-gradient(90deg, var(--pak-dark) 0%, var(--pak-blue) 100%);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  padding: 1rem 0;
-  transition: background 0.5s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); /* Stronger shadow */
+  transition: all 0.6s ease-in-out; 
+  z-index: 1020; /* Ensure navbar is above content */
 }
-.navbar-custom .navbar-brand { font-size: 1.8rem; font-weight: bold; position: relative; }
-.brand-text { color: var(--pak-gold); text-shadow: 0 0 5px rgba(241, 196, 15, 0.5); transition: transform 0.3s ease, text-shadow 0.3s ease; }
-.navbar-brand:hover .brand-text { transform: scale(1.05); text-shadow: 0 0 10px rgba(241, 196, 15, 0.8); }
-.navbar-custom .nav-link { color: var(--pak-light); font-size: 1.1rem; padding: 0.75rem 1.5rem; position: relative; transition: color 0.3s ease, transform 0.3s ease; }
-.navbar-custom .nav-link::after { content: ''; position: absolute; width: 0; height: 2px; bottom: 0; left: 50%; background-color: var(--pak-gold); transition: width 0.3s ease, left 0.3s ease; }
-.navbar-custom .nav-link:hover { color: var(--pak-gold); transform: translateY(-2px); }
-.navbar-custom .nav-link:hover::after { width: 100%; left: 0; }
-.custom-toggler { border-color: var(--pak-gold); color: var(--pak-gold); }
-.navbar-toggler-icon { background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(241, 196, 15, 1)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e"); }
 
-/* Content Wrapper */
-.content-wrapper { padding-top: 80px; }
+.brand-text {
+  color: var(--pak-gold);
+  font-weight: 800;
+  font-size: 1.9rem;
+  letter-spacing: 1px;
+  /* Apply subtle brand glow animation */
+  animation: brand-glow 3s infinite alternate ease-in-out;
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
 
-/* Form - Bookme-inspired */
-.bg-light { background-color: var(--pak-light) !important; }
-.form-label { font-size: 0.9rem; }
+.navbar-custom .nav-link {
+  color: var(--pak-light) !important;
+  position: relative;
+  /* Longer transition for a "gliding" effect */
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.navbar-custom .nav-link:hover {
+  color: var(--pak-gold) !important;
+  transform: translateY(-4px); /* Larger lift on hover */
+}
+
+/* Added: Link 'swoosh' on hover */
+.navbar-custom .nav-link::after {
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--pak-gold), transparent);
+}
+
+.navbar-custom .nav-link:hover::after {
+  width: 100%;
+  left: 0;
+  transform: scaleX(1);
+}
+
+/* --- Form and Input Enhancements --- */
+
 .form-control, .form-select {
-  border-radius: 8px;
-  border-color: var(--pak-blue);
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-.form-control:focus, .form-select:focus {
-  border-color: var(--pak-gold);
-  box-shadow: 0 0 5px rgba(241, 196, 15, 0.5);
-}
-.form-control.is-invalid, .form-select.is-invalid {
-  border-color: #dc3545;
+  border: 2px solid var(--pak-light); /* Start with a cleaner border */
+  transition: all 0.4s ease;
 }
 
-/* Buttons */
+.form-control:focus, .form-select:focus {
+  /* Dynamic border pulse animation on focus */
+  animation: border-pulse 1s forwards ease-in-out;
+}
+
+/* --- Button Enhancements --- */
+
+/* Primary Button with Shimmer Effect */
 .btn-primary {
   background-color: var(--pak-blue);
   border-color: var(--pak-blue);
-  border-radius: 20px;
-  transition: transform 0.3s ease, background-color 0.3s ease;
+  border-radius: 30px; /* More rounded, travel-friendly look */
+  /* Setup for shimmer animation */
+  background-image: linear-gradient(120deg, transparent 30%, rgba(255, 255, 255, 0.3) 50%, transparent 70%);
+  background-size: 200% 100%;
+  transition: all 0.4s ease, transform 0.1s ease;
+  overflow: hidden;
+  position: relative;
 }
+
 .btn-primary:hover {
-  background-color: #2980b9;
-  border-color: #2980b9;
-  transform: scale(1.05);
+  background-color: #066ecf; /* Slightly darker hover color */
+  border-color: #066ecf;
+  transform: scale(1.03); /* Soft, welcoming scale */
+  /* Run shimmer animation on hover */
+  animation: button-shimmer 1.5s infinite;
 }
-.btn-primary:disabled {
-  background-color: #6c757d;
-  border-color: #6c757d;
+
+.btn:active {
+  transform: scale(0.95); /* Deeper press for a satisfying 'book now' click */
+  box-shadow: 0 0 0 rgba(0, 0, 0, 0.3);
 }
-.btn-outline-secondary {
-  border-color: var(--pak-dark);
-  color: var(--pak-dark);
-  border-radius: 20px;
-  transition: transform 0.3s ease;
-}
-.btn-outline-secondary:hover {
-  background-color: var(--pak-dark);
-  color: var(--pak-light);
-  transform: scale(1.05);
-}
+
 .btn-success {
   background-color: var(--pak-green);
   border-color: var(--pak-green);
-  border-radius: 20px;
-  transition: transform 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0, 184, 148, 0.3);
 }
 .btn-success:hover {
-  background-color: #27ae60;
-  transform: scale(1.05);
+  background-color: #008a6d;
+  transform: scale(1.03);
+  box-shadow: 0 6px 15px rgba(0, 184, 148, 0.5);
 }
 
-/* Cards - Bookme-inspired */
+/* --- Card Enhancements (Perfect for destinations/packages) --- */
+
+@keyframes card-tilt {
+  0% { transform: translateY(0) rotateX(0deg); }
+  100% { transform: translateY(-10px) rotateX(1deg); }
+}
+
 .card {
-  border: none;
-  border-radius: 12px;
-  overflow: hidden;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid var(--pak-light);
+  border-radius: 16px; /* Increased border radius */
+  box-shadow: 0 5px 15px var(--pak-shadow);
+  transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1); /* Slower, smoother transition */
+  perspective: 1000px;
 }
+
 .card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-}
-.card-title {
-  color: var(--pak-dark);
-  font-weight: bold;
-}
-.card-text {
-  color: #7f8c8d;
-  font-size: 0.95rem;
-}
-.nav-link:hover {
-  color: #0d6efd !important;
-  transition: color 0.3s ease;
+  /* Apply keyframe animation for a more controlled, professional tilt */
+  animation: card-tilt 0.5s forwards ease-out;
+  /* Layered shadow for depth */
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2), 
+              0 0 10px var(--pak-blue); /* Subtle blue 'water' glow */
 }
 
-.navbar-brand {
-  font-size: 1.8rem;
+.card-img-top {
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  transition: transform 1.5s ease; /* Slow zoom on image hover */
 }
 
-button.btn-link:hover {
-  text-decoration: none;
+/* Image zoom effect on card hover */
+.card:hover .card-img-top {
+  transform: scale(1.05); 
 }
 
+/* --- Utility/General Animations --- */
 
-/* Animations */
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-@keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-.fade-in { animation: fadeIn 1s ease-in; }
-.slide-up { animation: slideUp 0.5s ease-out; }
+/* Content fadeIn and slideUp are good, but I'll make them slightly slower for better visibility */
+.fade-in { animation: fadeIn 1.2s ease-out; }
+.slide-up { animation: slideUp 0.7s ease-out; }

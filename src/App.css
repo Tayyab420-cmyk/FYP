@@ -1,26 +1,76 @@
+/* --- CSS Variable Placeholders (Define these in your :root or a common stylesheet) --- */
+:root {
+  --pak-dark-green: #0a4f32; /* Deep, rich green */
+  --pak-gold: #ffc300;       /* Vibrant gold/yellow */
+  --pak-light: #f4f5f0;      /* Off-white/cream */
+}
+
+/* --- Keyframe Animation for the Brand Text --- */
+@keyframes gold-pulse {
+  0% { transform: scale(1); opacity: 0.9; }
+  50% { transform: scale(1.03); opacity: 1; }
+  100% { transform: scale(1); opacity: 0.9; }
+}
+
+/* --- Enhanced Styling --- */
+
 .navbar-custom {
-  background: linear-gradient(90deg, #1a3c34, #2d6a4f);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  /* Deeper, more dynamic gradient */
+  background: linear-gradient(90deg, var(--pak-dark-green) 0%, #1a3c34 50%, #2d6a4f 100%);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4); /* Stronger shadow for depth */
+  transition: background-color 0.4s ease-in-out; /* Smooth transition */
 }
 
 .brand-text {
   color: var(--pak-gold);
-  font-weight: bold;
-  font-size: 1.5rem;
+  font-weight: 700; /* Bolder font-weight */
+  font-size: 1.75rem; /* Slightly larger */
+  letter-spacing: 1px;
+  /* Apply the subtle animation */
+  animation: gold-pulse 4s infinite ease-in-out;
 }
 
 .nav-link {
   color: var(--pak-light) !important;
+  padding: 10px 15px; /* Better padding for click area */
+  position: relative;
+  /* Smooth transition for all hover effects */
+  transition: color 0.3s ease, transform 0.2s ease;
 }
 
 .nav-link:hover {
   color: var(--pak-gold) !important;
+  transform: translateY(-2px); /* Subtle lift on hover */
+}
+
+/* --- Added a 'bottom-bar' animation for hover effect --- */
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 2px;
+  background-color: var(--pak-gold);
+  transition: width 0.3s ease-out; /* Animation for the bar */
+}
+
+.nav-link:hover::after {
+  width: 80%; /* Expand the bar on hover */
 }
 
 .custom-toggler {
-  border-color: var(--pak-gold);
+  border: 2px solid var(--pak-gold); /* Thicker border */
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.custom-toggler:hover {
+  background-color: rgba(255, 195, 0, 0.1); /* Slight gold highlight on hover */
 }
 
 .content-wrapper {
   padding-top: 70px; /* Offset for fixed navbar */
+  background-color: var(--pak-light); /* Set a background for contrast */
 }

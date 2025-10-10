@@ -1,0 +1,65 @@
+/* Hotels.css */
+:root {
+    --pak-dark: #0A3C4A;
+    --pak-gold: #F4A261;
+    --pak-light: #F9F7F3;
+  }
+  
+  .container {
+    background-color: var(--pak-light);
+  }
+  
+  h2, h3 {
+    color: var(--pak-dark);
+  }
+  
+  .btn-primary {
+    background-color: var(--pak-dark);
+    border-color: var(--pak-dark);
+  }
+  
+  .btn-primary:hover {
+    background-color: var(--pak-gold);
+    border-color: var(--pak-gold);
+    color: var(--pak-dark);
+  }
+  
+  .btn-secondary {
+    background-color: var(--pak-gold);
+    border-color: var(--pak-gold);
+    color: var(--pak-dark);
+  }
+  
+  .btn-secondary:hover {
+    background-color: var(--pak-dark);
+    border-color: var(--pak-dark);
+    color: var(--pak-light);
+  }
+  
+  .card-img-top {
+    height: 200px;
+    object-fit: cover;
+  }
+  
+  .card {
+    transition: transform 0.3s;
+  }
+  
+  .card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .slide-up {
+    animation: slideUp 0.5s ease-in-out;
+  }
+  
+  @keyframes slideUp {
+    from {
+      transform: translateY(20px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }

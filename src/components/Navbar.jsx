@@ -5,7 +5,7 @@ function Navbar({ isAuthenticated, handleLogout }) {
     <nav className="navbar navbar-expand-lg shadow-sm py-3" style={{ backgroundColor: '#ffffff' }}>
       <div className="container">
         <Link className="navbar-brand fw-bold fs-4 text-primary" to="/">
-          <span style={{ fontFamily: 'Segoe UI', letterSpacing: '1px' }}>DMA</span>
+          <span style={{ fontFamily: 'Segoe UI', letterSpacing: '1px' }}>Travel Tribe</span>
         </Link>
 
         <button

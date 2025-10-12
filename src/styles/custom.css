@@ -1,165 +1,206 @@
-/* Custom Colors - TRAVEL THEME PALETTE */
+/* --- Travel Theme Enhanced CSS with 3D Effects --- */
+
 :root {
-  --pak-green: #00b894;     /* Soft Teal (Nature/Success) */
-  --pak-blue: #0984e3;      /* Vibrant Blue (Sky/Trust/Primary) */
-  --pak-gold: #ffbe76;      /* Soft Gold/Peach (Sun/Luxury) */
-  --pak-dark: #2d3436;      /* Deep Contrast */
-  --pak-light: #f5f6fa;     /* Clean Background */
-  --pak-shadow: rgba(45, 52, 54, 0.15); /* Light shadow base */
+  --pak-green: #00b894;
+  --pak-blue: #0984e3;
+  --pak-gold: #ffbe76;
+  --pak-dark: #2d3436;
+  --pak-light: #f5f6fa;
+  --pak-shadow: rgba(45, 52, 54, 0.15);
 }
 
-/* --- Keyframe Animations --- */
-
-/* Keyframe for a subtle 'breathing' effect on the logo */
-@keyframes brand-glow {
-  0% { filter: drop-shadow(0 0 5px var(--pak-gold)); }
-  50% { filter: drop-shadow(0 0 10px var(--pak-gold)); }
-  100% { filter: drop-shadow(0 0 5px var(--pak-gold)); }
+/* --- Background --- */
+body {
+  background: linear-gradient(to bottom, var(--pak-blue), var(--pak-light));
+  color: var(--pak-dark);
+  min-height: 100vh;
+  overflow-x: hidden;
+  font-family: 'Poppins', sans-serif;
+  transition: background 1s ease;
+  perspective: 1000px; /* Enable 3D space */
 }
 
-/* Keyframe for a smooth, subtle border pulse on form focus */
-@keyframes border-pulse {
-  0% { border-color: var(--pak-blue); box-shadow: 0 0 0 rgba(9, 132, 227, 0.4); }
-  100% { border-color: var(--pak-gold); box-shadow: 0 0 8px rgba(255, 190, 118, 0.6); }
-}
-
-/* Keyframe for an attractive 'traveling' highlight on hover */
-@keyframes button-shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
-}
-
-/* --- Navbar Enhancements --- */
-
+/* --- Navbar --- */
 .navbar-custom {
-  /* Gradient: Blue (Trust) to Dark (Pro) */
-  background: linear-gradient(90deg, var(--pak-dark) 0%, var(--pak-blue) 100%);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); /* Stronger shadow */
-  transition: all 0.6s ease-in-out; 
-  z-index: 1020; /* Ensure navbar is above content */
+  background: rgba(45, 52, 54, 0.75);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  transition: all 0.4s ease-in-out;
+  position: sticky;
+  top: 0;
+  z-index: 1020;
+  padding: 1rem 2rem;
+  transform-style: preserve-3d;
+}
+
+.navbar-custom::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at top, rgba(255, 190, 118, 0.1), transparent 70%);
+  transform: translateZ(-20px);
+  z-index: -1;
+}
+
+.navbar-custom.shrink {
+  padding: 0.5rem 2rem;
+  background: rgba(45, 52, 54, 0.9);
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.5);
 }
 
 .brand-text {
   color: var(--pak-gold);
   font-weight: 800;
-  font-size: 1.9rem;
-  letter-spacing: 1px;
-  /* Apply subtle brand glow animation */
+  font-size: 1.8rem;
   animation: brand-glow 3s infinite alternate ease-in-out;
-  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transition: transform 0.4s ease, font-size 0.4s ease;
+  transform: translateZ(30px);
+}
+
+.navbar-custom.shrink .brand-text {
+  font-size: 1.5rem;
 }
 
 .navbar-custom .nav-link {
   color: var(--pak-light) !important;
   position: relative;
-  /* Longer transition for a "gliding" effect */
-  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transition: all 0.4s ease;
+  transform-style: preserve-3d;
 }
 
 .navbar-custom .nav-link:hover {
   color: var(--pak-gold) !important;
-  transform: translateY(-4px); /* Larger lift on hover */
+  transform: translateY(-3px) translateZ(10px);
 }
 
-/* Added: Link 'swoosh' on hover */
 .navbar-custom .nav-link::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -4px;
+  width: 0;
   height: 3px;
   background: linear-gradient(90deg, transparent, var(--pak-gold), transparent);
+  transition: all 0.4s ease;
+  transform: translateX(-50%);
 }
 
 .navbar-custom .nav-link:hover::after {
   width: 100%;
-  left: 0;
-  transform: scaleX(1);
 }
 
-/* --- Form and Input Enhancements --- */
-
-.form-control, .form-select {
-  border: 2px solid var(--pak-light); /* Start with a cleaner border */
-  transition: all 0.4s ease;
-}
-
-.form-control:focus, .form-select:focus {
-  /* Dynamic border pulse animation on focus */
-  animation: border-pulse 1s forwards ease-in-out;
-}
-
-/* --- Button Enhancements --- */
-
-/* Primary Button with Shimmer Effect */
+/* --- Buttons --- */
 .btn-primary {
   background-color: var(--pak-blue);
   border-color: var(--pak-blue);
-  border-radius: 30px; /* More rounded, travel-friendly look */
-  /* Setup for shimmer animation */
+  border-radius: 30px;
   background-image: linear-gradient(120deg, transparent 30%, rgba(255, 255, 255, 0.3) 50%, transparent 70%);
   background-size: 200% 100%;
-  transition: all 0.4s ease, transform 0.1s ease;
-  overflow: hidden;
+  transition: all 0.4s ease;
   position: relative;
+  overflow: hidden;
+  color: #fff;
+  box-shadow: 0 6px 15px rgba(9, 132, 227, 0.3);
+  transform-style: preserve-3d;
 }
 
 .btn-primary:hover {
-  background-color: #066ecf; /* Slightly darker hover color */
-  border-color: #066ecf;
-  transform: scale(1.03); /* Soft, welcoming scale */
-  /* Run shimmer animation on hover */
+  transform: scale(1.05) translateZ(10px);
   animation: button-shimmer 1.5s infinite;
+  box-shadow: 0 8px 20px rgba(9, 132, 227, 0.5);
 }
 
-.btn:active {
-  transform: scale(0.95); /* Deeper press for a satisfying 'book now' click */
-  box-shadow: 0 0 0 rgba(0, 0, 0, 0.3);
+.btn-primary:active {
+  transform: translateY(3px) translateZ(0);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.4) inset;
 }
 
 .btn-success {
   background-color: var(--pak-green);
   border-color: var(--pak-green);
   box-shadow: 0 4px 10px rgba(0, 184, 148, 0.3);
+  transform-style: preserve-3d;
 }
+
 .btn-success:hover {
   background-color: #008a6d;
-  transform: scale(1.03);
+  transform: scale(1.03) translateZ(10px);
   box-shadow: 0 6px 15px rgba(0, 184, 148, 0.5);
 }
 
-/* --- Card Enhancements (Perfect for destinations/packages) --- */
-
-@keyframes card-tilt {
-  0% { transform: translateY(0) rotateX(0deg); }
-  100% { transform: translateY(-10px) rotateX(1deg); }
-}
-
+/* --- Cards with 3D Hover Tilt --- */
 .card {
+  background-color: transparent;
   border: 1px solid var(--pak-light);
-  border-radius: 16px; /* Increased border radius */
+  border-radius: 16px;
   box-shadow: 0 5px 15px var(--pak-shadow);
-  transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1); /* Slower, smoother transition */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transform-style: preserve-3d;
   perspective: 1000px;
 }
 
 .card:hover {
-  /* Apply keyframe animation for a more controlled, professional tilt */
-  animation: card-tilt 0.5s forwards ease-out;
-  /* Layered shadow for depth */
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2), 
-              0 0 10px var(--pak-blue); /* Subtle blue 'water' glow */
+  transform: rotateY(8deg) rotateX(5deg) translateY(-8px) scale(1.03);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 15px var(--pak-blue);
 }
 
 .card-img-top {
   border-top-left-radius: 16px;
   border-top-right-radius: 16px;
-  transition: transform 1.5s ease; /* Slow zoom on image hover */
+  transition: transform 1.2s ease;
+  transform: translateZ(20px);
 }
 
-/* Image zoom effect on card hover */
 .card:hover .card-img-top {
-  transform: scale(1.05); 
+  transform: scale(1.07) translateZ(30px);
 }
 
-/* --- Utility/General Animations --- */
+/* --- Animations --- */
+@keyframes brand-glow {
+  0% { filter: drop-shadow(0 0 5px var(--pak-gold)); }
+  50% { filter: drop-shadow(0 0 10px var(--pak-gold)); }
+  100% { filter: drop-shadow(0 0 5px var(--pak-gold)); }
+}
 
-/* Content fadeIn and slideUp are good, but I'll make them slightly slower for better visibility */
+@keyframes button-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
 .fade-in { animation: fadeIn 1.2s ease-out; }
 .slide-up { animation: slideUp 0.7s ease-out; }
+
+/* --- Scroll Animation Enhancements --- */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 0.8s ease;
+}
+.reveal.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* --- Utility --- */
+.container {
+  background: transparent !important;
+}
+
+/* --- Scroll Navbar Script --- */
+/* Add this JavaScript snippet in your main layout:
+window.addEventListener('scroll', () => {
+  const navbar = document.querySelector('.navbar-custom');
+  if (window.scrollY > 50) navbar.classList.add('shrink');
+  else navbar.classList.remove('shrink');
+});
+*/

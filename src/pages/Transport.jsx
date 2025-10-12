@@ -14,21 +14,39 @@ const Transport = () => {
   const [busRoutes, setBusRoutes] = useState([]);
   const [fetchError, setFetchError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [bookingError, setBookingError] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedRoute, setSelectedRoute] = useState(null);
+  const [userDetails, setUserDetails] = useState({
+    name: '',
+    email: '',
+    phone: '',
+  });
 
-  // Fetch bus routes from backend using axios
-  useEffect(() => {
+  // Fetch bus routes
+  const fetchBusRoutes = async () => {
     setIsLoading(true);
-    axios.get('http://localhost:8000/api/busroutes/')
-      .then(response => {
-        console.log('Fetched bus routes:', response.data); // Debug log
-        setBusRoutes(response.data);
-        setFetchError(null);
-      })
-      .catch(error => {
-        console.error('Error fetching bus routes:', error);
+    try {
+      const response = await axios.get('http://localhost:8000/api/busroutes/');
+      console.log('Fetched bus routes:', response.data);
+      setBusRoutes(response.data);
+      setFetchError(null);
+    } catch (error) {
+      console.error('Error fetching bus routes:', error);
+      if (error.response) {
+        setFetchError(`Server error: ${error.response.status} - ${error.response.statusText}`);
+      } else if (error.request) {
+        setFetchError('Network error: Check if the backend server is running or if CORS is configured correctly.');
+      } else {
         setFetchError(error.message);
-      })
-      .finally(() => setIsLoading(false));
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchBusRoutes();
   }, []);
 
   const handleChange = (e) => {
@@ -39,7 +57,6 @@ const Transport = () => {
       const travelDate = new Date(value);
       const today = new Date();
       today.setHours(0, 0, 0, 0);
-
       if (travelDate < today) {
         setDateError('Travel date must be today or in the future.');
       } else {
@@ -69,10 +86,56 @@ const Transport = () => {
     setFormData({ fromCity: '', toCity: '', travelDate: '', passengers: 1 });
     setResults([]);
     setDateError('');
+    setBookingError(null);
+    setShowModal(false);
+    setUserDetails({ name: '', email: '', phone: '' });
   };
 
   const handleBookBus = (route) => {
-    alert(`Booked bus from ${route.from_city} to ${route.to_city} on ${formData.travelDate} for ${formData.passengers} passenger(s).\nTotal: PKR ${route.totalPrice}`);
+    if (route.seats_available < formData.passengers) {
+      setBookingError(`Only ${route.seats_available} seats available for this route.`);
+      return;
+    }
+    setSelectedRoute(route);
+    setShowModal(true);
+  };
+
+  const handleUserDetailsChange = (e) => {
+    const { name, value } = e.target;
+    setUserDetails({ ...userDetails, [name]: value });
+  };
+
+  const submitBooking = async () => {
+    if (!userDetails.name || !userDetails.email || !userDetails.phone) {
+      setBookingError('Please fill in all user details.');
+      return;
+    }
+
+    try {
+      const bookingData = {
+        user: userDetails.name,
+        type: 'bus',
+        details: {
+          from_city: selectedRoute.from_city,
+          to_city: selectedRoute.to_city,
+          departure_time: selectedRoute.departure_time,
+          travel_date: formData.travelDate,
+          passengers: formData.passengers,
+          email: userDetails.email,
+          phone: userDetails.phone,
+        },
+        total_price: selectedRoute.totalPrice,
+      };
+      const response = await axios.post('http://localhost:8000/api/bookings/', bookingData);
+      alert(`Booking confirmed! Booking ID: ${response.data.id}`);
+      setShowModal(false);
+      setUserDetails({ name: '', email: '', phone: '' });
+      setBookingError(null);
+      await fetchBusRoutes(); // Refresh routes to update seats_available
+    } catch (error) {
+      console.error('Error creating booking:', error);
+      setBookingError(error.response?.data?.detail || 'Failed to create booking. Please try again.');
+    }
   };
 
   return (
@@ -86,6 +149,11 @@ const Transport = () => {
       {fetchError && (
         <div className="alert alert-danger text-center" role="alert">
           Error fetching bus routes: {fetchError}
+        </div>
+      )}
+      {bookingError && (
+        <div className="alert alert-danger text-center" role="alert">
+          {bookingError}
         </div>
       )}
       <form onSubmit={handleSubmit}>
@@ -175,6 +243,69 @@ const Transport = () => {
             No bus routes available. Try again later.
           </div>
         )
+      )}
+
+      {/* Bootstrap Modal for User Details */}
+      {showModal && selectedRoute && (
+        <div className="modal fade show d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+          <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Enter Booking Details</h5>
+                <button type="button" className="btn-close" onClick={() => setShowModal(false)}></button>
+              </div>
+              <div className="modal-body">
+                <div className="mb-3">
+                  <label htmlFor="name" className="form-label">Name</label>
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    value={userDetails.name}
+                    onChange={handleUserDetailsChange}
+                    className="form-control"
+                    placeholder="e.g., John Doe"
+                    required
+                  />
+                </div>
+                <div className="mb-3">
+                  <label htmlFor="email" className="form-label">Email</label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    value={userDetails.email}
+                    onChange={handleUserDetailsChange}
+                    className="form-control"
+                    placeholder="e.g., john@example.com"
+                    required
+                  />
+                </div>
+                <div className="mb-3">
+                  <label htmlFor="phone" className="form-label">Phone</label>
+                  <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    value={userDetails.phone}
+                    onChange={handleUserDetailsChange}
+                    className="form-control"
+                    placeholder="e.g., 1234567890"
+                    required
+                  />
+                </div>
+              </div>
+              <div className="modal-footer">
+                <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>
+                  Cancel
+                </button>
+                <button type="button" className="btn btn-primary" onClick={submitBooking}>
+                  Confirm Booking
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

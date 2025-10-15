@@ -7,6 +7,9 @@ const Hotels = () => {
     city: '',
     checkInDate: '',
     guests: 1,
+    minPrice: '',
+    maxPrice: '',
+    roomType: '',
   });
   const [results, setResults] = useState([]);
   const [dateError, setDateError] = useState('');
@@ -21,14 +24,17 @@ const Hotels = () => {
     email: '',
     phone: '',
   });
+  const [roomTypes, setRoomTypes] = useState([]);
 
-  // Fetch hotels
   const fetchHotels = async () => {
     setIsLoading(true);
     try {
       const response = await axios.get('http://localhost:8000/api/hotels/');
       console.log('Fetched hotels:', response.data);
       setHotels(response.data);
+      // Extract unique room types
+      const allRoomTypes = [...new Set(response.data.flatMap(hotel => hotel.room_types))];
+      setRoomTypes(allRoomTypes);
       setFetchError(null);
     } catch (error) {
       console.error('Error fetching hotels:', error);
@@ -70,7 +76,10 @@ const Hotels = () => {
 
     const filteredResults = hotels
       .filter((hotel) =>
-        (!formData.city || hotel.city.toLowerCase().includes(formData.city.toLowerCase()))
+        (!formData.city || hotel.city.toLowerCase().includes(formData.city.toLowerCase())) &&
+        (!formData.minPrice || hotel.price >= Number(formData.minPrice)) &&
+        (!formData.maxPrice || hotel.price <= Number(formData.maxPrice)) &&
+        (!formData.roomType || hotel.room_types.includes(formData.roomType))
       )
       .map((hotel) => ({
         ...hotel,
@@ -81,7 +90,7 @@ const Hotels = () => {
   };
 
   const handleReset = () => {
-    setFormData({ city: '', checkInDate: '', guests: 1 });
+    setFormData({ city: '', checkInDate: '', guests: 1, minPrice: '', maxPrice: '', roomType: '' });
     setResults([]);
     setDateError('');
     setBookingError(null);
@@ -90,10 +99,6 @@ const Hotels = () => {
   };
 
   const handleBookHotel = (hotel) => {
-    if (hotel.rooms_available < formData.guests) {
-      setBookingError(`Only ${hotel.rooms_available} rooms available for this hotel.`);
-      return;
-    }
     setSelectedHotel(hotel);
     setShowModal(true);
   };
@@ -128,7 +133,6 @@ const Hotels = () => {
       setShowModal(false);
       setUserDetails({ name: '', email: '', phone: '' });
       setBookingError(null);
-      await fetchHotels(); // Refresh hotels to update rooms_available
     } catch (error) {
       console.error('Error creating booking:', error);
       setBookingError(error.response?.data?.detail || 'Failed to create booking. Please try again.');
@@ -195,6 +199,45 @@ const Hotels = () => {
               required
             />
           </div>
+          <div className="form-group">
+            <label htmlFor="minPrice">Min Price (PKR)</label>
+            <input
+              type="number"
+              id="minPrice"
+              name="minPrice"
+              value={formData.minPrice}
+              onChange={handleChange}
+              placeholder="e.g., 5000"
+              className="form-control"
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="maxPrice">Max Price (PKR)</label>
+            <input
+              type="number"
+              id="maxPrice"
+              name="maxPrice"
+              value={formData.maxPrice}
+              onChange={handleChange}
+              placeholder="e.g., 20000"
+              className="form-control"
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="roomType">Room Type</label>
+            <select
+              id="roomType"
+              name="roomType"
+              value={formData.roomType}
+              onChange={handleChange}
+              className="form-control"
+            >
+              <option value="">All Room Types</option>
+              {roomTypes.map((type) => (
+                <option key={type} value={type}>{type}</option>
+              ))}
+            </select>
+          </div>
           <div className="d-flex gap-2 mt-3">
             <button type="submit" className="btn btn-primary" disabled={dateError}>Search</button>
             <button type="button" className="btn btn-secondary" onClick={handleReset}>Reset</button>
@@ -214,7 +257,7 @@ const Hotels = () => {
                     <h5 className="card-title">{hotel.name}</h5>
                     <p className="card-text"><strong>City:</strong> {hotel.city}</p>
                     <p className="card-text"><strong>Room Types:</strong> {hotel.room_types.join(', ')}</p>
-                    <p className="card-text"><strong>Available Rooms:</strong> {hotel.rooms_available}</p>
+                    <p className="card-text"><strong>Price per Night:</strong> PKR {hotel.price}</p>
                     <p className="card-text"><strong>Total Price:</strong> PKR {hotel.totalPrice} ({formData.guests} guest(s))</p>
                   </div>
                 </div>
@@ -230,7 +273,6 @@ const Hotels = () => {
         )
       )}
 
-      {/* Bootstrap Modal for User Details */}
       {showModal && selectedHotel && (
         <div className="modal fade show d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
           <div className="modal-dialog modal-dialog-centered">

@@ -8,6 +8,9 @@ const Transport = () => {
     toCity: '',
     travelDate: '',
     passengers: 1,
+    minPrice: '',
+    maxPrice: '',
+    departureTime: '',
   });
   const [results, setResults] = useState([]);
   const [dateError, setDateError] = useState('');
@@ -23,7 +26,6 @@ const Transport = () => {
     phone: '',
   });
 
-  // Fetch bus routes
   const fetchBusRoutes = async () => {
     setIsLoading(true);
     try {
@@ -69,10 +71,13 @@ const Transport = () => {
     e.preventDefault();
     if (dateError) return;
 
-    const filteredResults = busRoutes
+    let filteredResults = busRoutes
       .filter((route) =>
         (!formData.fromCity || route.from_city.toLowerCase().includes(formData.fromCity.toLowerCase())) &&
-        (!formData.toCity || route.to_city.toLowerCase().includes(formData.toCity.toLowerCase()))
+        (!formData.toCity || route.to_city.toLowerCase().includes(formData.toCity.toLowerCase())) &&
+        (!formData.minPrice || route.price >= Number(formData.minPrice)) &&
+        (!formData.maxPrice || route.price <= Number(formData.maxPrice)) &&
+        (!formData.departureTime || route.departure_time.includes(formData.departureTime))
       )
       .map((route) => ({
         ...route,
@@ -83,7 +88,7 @@ const Transport = () => {
   };
 
   const handleReset = () => {
-    setFormData({ fromCity: '', toCity: '', travelDate: '', passengers: 1 });
+    setFormData({ fromCity: '', toCity: '', travelDate: '', passengers: 1, minPrice: '', maxPrice: '', departureTime: '' });
     setResults([]);
     setDateError('');
     setBookingError(null);
@@ -92,10 +97,6 @@ const Transport = () => {
   };
 
   const handleBookBus = (route) => {
-    if (route.seats_available < formData.passengers) {
-      setBookingError(`Only ${route.seats_available} seats available for this route.`);
-      return;
-    }
     setSelectedRoute(route);
     setShowModal(true);
   };
@@ -131,7 +132,6 @@ const Transport = () => {
       setShowModal(false);
       setUserDetails({ name: '', email: '', phone: '' });
       setBookingError(null);
-      await fetchBusRoutes(); // Refresh routes to update seats_available
     } catch (error) {
       console.error('Error creating booking:', error);
       setBookingError(error.response?.data?.detail || 'Failed to create booking. Please try again.');
@@ -211,6 +211,44 @@ const Transport = () => {
               required
             />
           </div>
+          <div className="form-group">
+            <label htmlFor="minPrice">Min Price (PKR)</label>
+            <input
+              type="number"
+              id="minPrice"
+              name="minPrice"
+              value={formData.minPrice}
+              onChange={handleChange}
+              placeholder="e.g., 1000"
+              className="form-control"
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="maxPrice">Max Price (PKR)</label>
+            <input
+              type="number"
+              id="maxPrice"
+              name="maxPrice"
+              value={formData.maxPrice}
+              onChange={handleChange}
+              placeholder="e.g., 5000"
+              className="form-control"
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="departureTime">Departure Time</label>
+            <select
+              id="departureTime"
+              name="departureTime"
+              value={formData.departureTime}
+              onChange={handleChange}
+              className="form-control"
+            >
+              <option value="">All Times</option>
+              <option value="AM">Morning (12:00 AM - 11:59 AM)</option>
+              <option value="PM">Afternoon/Evening (12:00 PM - 11:59 PM)</option>
+            </select>
+          </div>
           <div className="d-flex gap-2 mt-3">
             <button type="submit" className="btn btn-primary" disabled={dateError}>Search</button>
             <button type="button" className="btn btn-secondary" onClick={handleReset}>Reset</button>
@@ -229,7 +267,7 @@ const Transport = () => {
                   <div className="card-body text-center">
                     <h5 className="card-title">{route.from_city} to {route.to_city}</h5>
                     <p className="card-text"><strong>Departure:</strong> {route.departure_time}</p>
-                    <p className="card-text"><strong>Available Seats:</strong> {route.seats_available}</p>
+                    <p className="card-text"><strong>Price per Seat:</strong> PKR {route.price}</p>
                     <p className="card-text"><strong>Total Price:</strong> PKR {route.totalPrice} ({formData.passengers} passengers)</p>
                   </div>
                 </div>
@@ -245,7 +283,6 @@ const Transport = () => {
         )
       )}
 
-      {/* Bootstrap Modal for User Details */}
       {showModal && selectedRoute && (
         <div className="modal fade show d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
           <div className="modal-dialog modal-dialog-centered">
